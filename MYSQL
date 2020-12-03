@@ -1,0 +1,188 @@
+soft@soft-Precision-M4700:~$ sudo mysql -u root -p
+[sudo] password for soft: 
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 37
+Server version: 5.7.32-0ubuntu0.18.04.1 (Ubuntu)
+
+Copyright (c) 2000, 2020, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+4 rows in set (0.00 sec)
+
+mysql> create database studentdb;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> show database;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'database' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| studentdb          |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use studentdb;
+Database changed
+mysql> create table student (rollno int,name varchar(40),age int);
+Query OK, 0 rows affected (0.26 sec)
+
+mysql> show tables;
++---------------------+
+| Tables_in_studentdb |
++---------------------+
+| student             |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> desc student;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int(11)     | YES  |     | NULL    |       |
+| name   | varchar(40) | YES  |     | NULL    |       |
+| age    | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> insert into student values(1,"ann",11);
+Query OK, 1 row affected (0.06 sec)
+
+mysql> insert into student values(2,"anu",11),(3,"amal",18),(4,"alwin",12);
+Query OK, 3 rows affected (0.29 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select* from student;
++--------+-------+------+
+| rollno | name  | age  |
++--------+-------+------+
+|      1 | ann   |   11 |
+|      2 | anu   |   11 |
+|      3 | amal  |   18 |
+|      4 | alwin |   12 |
++--------+-------+------+
+4 rows in set (0.00 sec)
+
+mysql> alter table student add constraint primary key(rollno);
+Query OK, 0 rows affected (0.61 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc student;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| rollno | int(11)     | NO   | PRI | NULL    |       |
+| name   | varchar(40) | YES  |     | NULL    |       |
+| age    | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into student values (5,"anitte",16);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select* from student;
++--------+--------+------+
+| rollno | name   | age  |
++--------+--------+------+
+|      1 | ann    |   11 |
+|      2 | anu    |   11 |
+|      3 | amal   |   18 |
+|      4 | alwin  |   12 |
+|      5 | anitte |   16 |
++--------+--------+------+
+5 rows in set (0.00 sec)
+
+mysql> alter table student add column dob date;
+Query OK, 0 rows affected (0.55 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select* from student;
++--------+--------+------+------+
+| rollno | name   | age  | dob  |
++--------+--------+------+------+
+|      1 | ann    |   11 | NULL |
+|      2 | anu    |   11 | NULL |
+|      3 | amal   |   18 | NULL |
+|      4 | alwin  |   12 | NULL |
+|      5 | anitte |   16 | NULL |
++--------+--------+------+------+
+5 rows in set (0.00 sec)
+
+mysql> update student set dob='2009-02-12' where roll n.o=1;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'n.o=1' at line 1
+mysql> update student set dob='2009-02-12' where rolln0=1;
+ERROR 1054 (42S22): Unknown column 'rolln0' in 'where clause'
+mysql> update student set dob='2009-02-12' where rollno=1;
+Query OK, 1 row affected (0.04 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update student set dob='2009-02-12' where rollno in (1,2,3,4,5);
+Query OK, 4 rows affected (0.04 sec)
+Rows matched: 5  Changed: 4  Warnings: 0
+
+mysql> select rollno,name
+    -> select rollno,name;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select rollno,name' at line 2
+mysql> select rollno,name from student;
++--------+--------+
+| rollno | name   |
++--------+--------+
+|      1 | ann    |
+|      2 | anu    |
+|      3 | amal   |
+|      4 | alwin  |
+|      5 | anitte |
++--------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select* from student where name like 'a%';
++--------+--------+------+------------+
+| rollno | name   | age  | dob        |
++--------+--------+------+------------+
+|      1 | ann    |   11 | 2009-02-12 |
+|      2 | anu    |   11 | 2009-02-12 |
+|      3 | amal   |   18 | 2009-02-12 |
+|      4 | alwin  |   12 | 2009-02-12 |
+|      5 | anitte |   16 | 2009-02-12 |
++--------+--------+------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select Avg(age) from student;
++----------+
+| Avg(age) |
++----------+
+|  13.6000 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select count(a) from student where age=12;
+ERROR 1054 (42S22): Unknown column 'a' in 'field list'
+mysql> select count(*) from student where age=12;
++----------+
+| count(*) |
++----------+
+|        1 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> 
+
